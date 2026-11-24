@@ -1,9 +1,9 @@
-import {ChatOpenAI} from "@langchain/openai";
-import {geminiConfig, textOutModel} from "./constants";
-import {ChatPromptTemplate} from "@langchain/core/prompts";
-import {StringOutputParser} from "@langchain/core/output_parsers";
-import type { Document} from "@langchain/core/documents";
-import {RunnableSequence} from "@langchain/core/runnables";
+import { ChatOpenAI } from '@langchain/openai';
+import { geminiConfig, textOutModel } from './constants';
+import { ChatPromptTemplate } from '@langchain/core/prompts';
+import { StringOutputParser } from '@langchain/core/output_parsers';
+import type { Document } from '@langchain/core/documents';
+import { RunnableSequence } from '@langchain/core/runnables';
 
 export const model = new ChatOpenAI({
   ...geminiConfig,
@@ -12,7 +12,7 @@ export const model = new ChatOpenAI({
 
 const prompt = ChatPromptTemplate.fromMessages([
   [
-    "system",
+    'system',
     `Ти асистент компанії «Твоя Галера», який відповідає на питання співробітників.
 Правила:
 - відповідай лише на основі контексту нижче;
@@ -23,7 +23,7 @@ const prompt = ChatPromptTemplate.fromMessages([
 Контекст:
 {context}`,
   ],
-  ["human", "{question}"],
+  ['human', '{question}'],
 ]);
 
 // as variant with pipe() method:
@@ -32,11 +32,14 @@ const prompt = ChatPromptTemplate.fromMessages([
 export const answerChain = RunnableSequence.from([
   prompt,
   model,
-  new StringOutputParser()
+  new StringOutputParser(),
 ]);
 
 export function formatContext(docs: Document[]) {
   return docs
-    .map((doc, i) => `[${i + 1}] ${doc.metadata.title} (${doc.metadata.source})\n${doc.pageContent}`)
+    .map(
+      (doc, i) =>
+        `[${i + 1}] ${doc.metadata.title} (${doc.metadata.source})\n${doc.pageContent}`,
+    )
     .join('\n\n');
 }

@@ -1,6 +1,6 @@
-import {viewChunks} from "./view-chunks";
-import {indexDocs} from "./index-docs";
-import {chat} from "./chat";
+import { viewChunks } from './view-chunks';
+import { indexDocs } from './index-docs';
+import { chat } from './chat';
 
 // await viewChunks();
 
