@@ -1,31 +1,45 @@
 import { getRecordManager, getVectorStore } from './store';
 import { loadDocuments, splitDocuments } from './prepare-documents';
 import { index } from '@langchain/core/indexing';
+import { PGVectorStore } from '@langchain/community/vectorstores/pgvector';
 
-export async function indexDocs() {
+type IndexDocsParams = { force?: boolean };
+
+export async function indexDocs({ force = false }: IndexDocsParams = {}) {
   const recordManager = getRecordManager();
-  await recordManager.createSchema();
+  let vectorStore: PGVectorStore | undefined;
 
-  const vectorStore = await getVectorStore();
-  const docs = await loadDocuments();
-  const docsSource = await splitDocuments(docs);
+  try {
+    await recordManager.createSchema();
+    vectorStore = await getVectorStore();
 
-  const { numAdded, numUpdated, numSkipped, numDeleted } = await index({
-    docsSource,
-    recordManager,
-    vectorStore,
-    options: {
-      cleanup: 'full',
-      sourceIdKey: 'source',
-    },
-  });
+    if (force) {
+      await recordManager.pool.query(
+        `TRUNCATE ${vectorStore.computedTableName}, ${recordManager.finalTableName}`,
+      );
+      console.log('Force mode: chunks and records cleared');
+    }
 
-  console.log('Indexing complete');
-  console.log('Total added records', numAdded);
-  console.log('Total updated records', numUpdated);
-  console.log('Total skipped records', numSkipped);
-  console.log('Total deleted', numDeleted);
+    const docs = await loadDocuments();
+    const docsSource = await splitDocuments(docs);
 
-  await recordManager.end();
-  await vectorStore.end();
+    const { numAdded, numUpdated, numSkipped, numDeleted } = await index({
+      docsSource,
+      recordManager,
+      vectorStore,
+      options: {
+        cleanup: 'full',
+        sourceIdKey: 'source',
+      },
+    });
+
+    console.log('Indexing complete');
+    console.log('Total added records', numAdded);
+    console.log('Total updated records', numUpdated);
+    console.log('Total skipped records', numSkipped);
+    console.log('Total deleted', numDeleted);
+  } finally {
+    await recordManager.end();
+    await vectorStore?.end();
+  }
 }

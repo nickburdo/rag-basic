@@ -7,6 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "tsx --env-file=.env src/index.ts",
     "start": "tsx --env-file=.env src/server.ts",
+    "index": "tsx --env-file=.env src/index-cli.ts",
+    "index:force": "tsx --env-file=.env src/index-cli.ts --force",
     "format": "prettier . --write",
     "format:check": "prettier . --check"
   },

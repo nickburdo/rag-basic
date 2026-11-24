@@ -4,6 +4,6 @@ import { chat } from './chat';
 
 // await viewChunks();
 
-// await indexDocs();
+await indexDocs();
 
 await chat();
