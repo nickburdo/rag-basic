@@ -1,6 +1,6 @@
-import {getRecordManager, getVectorStore} from "./store";
-import {loadDocuments, splitDocuments} from "./prepare-documents";
-import {index} from "@langchain/core/indexing";
+import { getRecordManager, getVectorStore } from './store';
+import { loadDocuments, splitDocuments } from './prepare-documents';
+import { index } from '@langchain/core/indexing';
 
 export async function indexDocs() {
   const recordManager = getRecordManager();
@@ -15,12 +15,12 @@ export async function indexDocs() {
     recordManager,
     vectorStore,
     options: {
-      cleanup: "full",
-      sourceIdKey: "source",
-    }
+      cleanup: 'full',
+      sourceIdKey: 'source',
+    },
   });
 
-  console.log("Indexing complete");
+  console.log('Indexing complete');
   console.log('Total added records', numAdded);
   console.log('Total updated records', numUpdated);
   console.log('Total skipped records', numSkipped);
