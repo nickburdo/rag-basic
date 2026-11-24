@@ -1,5 +1,5 @@
-import {getVectorStore} from "./store";
-import {loadDocuments, splitDocuments} from "./prepare-documents";
+import { getVectorStore } from './store';
+import { loadDocuments, splitDocuments } from './prepare-documents';
 
 export async function indexDocs() {
   const store = await getVectorStore();

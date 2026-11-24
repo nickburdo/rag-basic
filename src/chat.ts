@@ -1,7 +1,7 @@
-import readline from "node:readline/promises";
-import {stdin as input, stdout as output} from "node:process";
-import {getVectorStore} from "./store";
-import {ask} from "./ask";
+import readline from 'node:readline/promises';
+import { stdin as input, stdout as output } from 'node:process';
+import { getVectorStore } from './store';
+import { ask } from './ask';
 
 export async function chat() {
   const store = await getVectorStore();
@@ -11,14 +11,16 @@ export async function chat() {
 
   try {
     while (true) {
-      const question = (await rl.question("Your question ('end' for finish): ")).trim();
+      const question = (
+        await rl.question("Your question ('end' for finish): ")
+      ).trim();
       if (question === 'end') break;
       if (!question) continue;
 
       try {
         await ask(retriever, question);
       } catch (error) {
-        console.error("Error:", error);
+        console.error('Error:', error);
       }
     }
   } finally {
