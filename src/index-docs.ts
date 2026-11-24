@@ -1,18 +1,31 @@
-import {getVectorStore} from "./store";
+import {getRecordManager, getVectorStore} from "./store";
 import {loadDocuments, splitDocuments} from "./prepare-documents";
+import {index} from "@langchain/core/indexing";
 
 export async function indexDocs() {
-  const store = await getVectorStore();
+  const recordManager = getRecordManager();
+  await recordManager.createSchema();
+
+  const vectorStore = await getVectorStore();
   const docs = await loadDocuments();
+  const docsSource = await splitDocuments(docs);
 
-  for (const doc of docs) {
-    const chunks = await splitDocuments([doc]);
-    // First, we remove old fragments of this file so that a re-run does not duplicate them.
-    await store.delete({ filter: { source: doc.metadata.source } });
-    await store.addDocuments(chunks);
+  const { numAdded, numUpdated, numSkipped, numDeleted } = await index({
+    docsSource,
+    recordManager,
+    vectorStore,
+    options: {
+      cleanup: "full",
+      sourceIdKey: "source",
+    }
+  });
 
-    console.log(`${doc.metadata.source} -> ${chunks.length} chunks`);
-  }
+  console.log("Indexing complete");
+  console.log('Total added records', numAdded);
+  console.log('Total updated records', numUpdated);
+  console.log('Total skipped records', numSkipped);
+  console.log('Total deleted', numDeleted);
 
-  await store.end();
+  await recordManager.end();
+  await vectorStore.end();
 }
