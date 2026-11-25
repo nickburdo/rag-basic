@@ -9,7 +9,7 @@ export async function loadDocuments(
   return Promise.all(
     files.map(async (file) => {
       const text = await readFile(`${dir}/${file}`, 'utf8');
-      const title = text.match(/^#(.+)$/m)?.[1] ?? file;
+      const title = text.match(/^#\s+(.+)$/m)?.[1] ?? file;
       return new Document({
         pageContent: text,
         metadata: {

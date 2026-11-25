@@ -15,9 +15,9 @@ const embeddingModel = process.env.EMBEDDING_MODEL ?? 'gemini-embedding-2';
 
 // 1.Indexing: for now, each file is a single fragment.
 const docs: { source: string; text: string; vector: number[] }[] = [];
-for (const file of await readdir('docs')) {
+for (const file of await readdir('knowledge-base')) {
   if (!file.endsWith('.md')) continue;
-  const text = await readFile(`docs/${file}`, 'utf8');
+  const text = await readFile(`knowledge-base/${file}`, 'utf8');
   const { data } = await openai.embeddings.create({
     model: embeddingModel,
     input: text,

@@ -12,6 +12,13 @@ export async function indexDocs({ force = false }: IndexDocsParams = {}) {
   try {
     await recordManager.createSchema();
     vectorStore = await getVectorStore();
+    const docs = await loadDocuments();
+
+    if (docs.length === 0) {
+      throw new Error(
+        'No documents found in knowledge-base/, refusing to index (would delete all chunks)',
+      );
+    }
 
     if (force) {
       await recordManager.pool.query(
@@ -20,7 +27,6 @@ export async function indexDocs({ force = false }: IndexDocsParams = {}) {
       console.log('Force mode: chunks and records cleared');
     }
 
-    const docs = await loadDocuments();
     const docsSource = await splitDocuments(docs);
 
     const { numAdded, numUpdated, numSkipped, numDeleted } = await index({
@@ -39,7 +45,6 @@ export async function indexDocs({ force = false }: IndexDocsParams = {}) {
     console.log('Total skipped records', numSkipped);
     console.log('Total deleted', numDeleted);
   } finally {
-    await recordManager.end();
-    await vectorStore?.end();
+    await Promise.allSettled([recordManager.end(), vectorStore?.end()]);
   }
 }
