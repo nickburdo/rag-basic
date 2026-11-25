@@ -1,0 +1,2 @@
+#!/bin/sh
+sh .githooks/reindex-if-changed.sh ORIG_HEAD HEAD
