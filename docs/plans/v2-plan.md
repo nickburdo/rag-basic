@@ -64,7 +64,7 @@
 
 ## Предложения по мелочам (можно возразить)
 
-- Имя файла примера: `src/examples/rag-from-scratch.ts`.
+- Имя файла примера: `src/examples/rag-manually-example.ts` (выбор автора; первоначально предлагалось `rag-from-scratch.ts`).
 
 ## История пересмотров
 
