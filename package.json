@@ -5,8 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "tsx --env-file=.env src/index.ts",
+    "chat:cli": "tsx --env-file=.env src/index.ts",
     "start": "tsx --env-file=.env src/server.ts",
+    "example:rag": "tsx --env-file=.env src/examples/rag-manually-example.ts",
     "index": "tsx --env-file=.env src/index-cli.ts",
     "index:force": "tsx --env-file=.env src/index-cli.ts --force",
     "format": "prettier . --write",

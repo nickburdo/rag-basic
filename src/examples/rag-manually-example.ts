@@ -1,3 +1,8 @@
+// Educational example: RAG from scratch, without LangChain and without a database.
+// - Each knowledge-base file is embedded as a single fragment, vectors live in memory.
+// - Embeddings are recomputed on every run (calls the embeddings API for all files).
+// - Answers a single question and exits; not a chat.
+// Run: npm run example:rag (from the project root).
 import OpenAI from 'openai';
 import { cosine } from './cosine';
 import { readdir } from 'node:fs/promises';
@@ -67,9 +72,3 @@ const response = await openai.chat.completions.create({
 });
 
 console.log(response.choices[0].message.content);
-
-// The list of available models
-// const models = await client.models.list();
-// for await (const m of models) {
-//   console.log(m.id);
-// }
