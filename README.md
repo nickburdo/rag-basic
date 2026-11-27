@@ -54,6 +54,17 @@ flowchart LR
 - Docker
 - A [Google AI Studio](https://aistudio.google.com/) API key
 
+### Database
+
+> [!IMPORTANT]
+> The project needs a **local PostgreSQL with pgvector running in Docker**. There is no cloud database. Start it **before** indexing or starting any chat, otherwise every command fails to connect:
+>
+> ```bash
+> docker compose up -d
+> ```
+>
+> The database listens on `localhost:5433` (user, password and database: `rag`), which matches `DATABASE_URL` in `.env.example`. The data is kept in a Docker volume across restarts. Stop it with `docker compose stop`.
+
 ### Setup
 
 ```bash
@@ -63,7 +74,7 @@ npm install
 # 2. Create your .env from the template and set OPENAI_API_KEY (your Gemini key)
 cp .env.example .env
 
-# 3. Start Postgres with pgvector (port 5433)
+# 3. Start the local database: Postgres with pgvector in Docker (required)
 docker compose up -d
 
 # 4. Index the knowledge base
