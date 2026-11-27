@@ -8,6 +8,8 @@ import { RunnableSequence } from '@langchain/core/runnables';
 export const model = new ChatOpenAI({
   ...geminiConfig,
   model: textOutModel,
+  timeout: 30_000,
+  maxRetries: 1,
 });
 
 const prompt = ChatPromptTemplate.fromMessages([
